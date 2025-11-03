@@ -1,25 +1,44 @@
 class CoinStack {
-  final int a;
-  const CoinStack(this.a);
+  List<int> coins;
 
-  @override
-  bool operator >(Object other) {
-    if (other > CoinStack) {
-      return a < other.a;
+  CoinStack(this.coins);
+
+  int get value {
+    var result = 0;
+    for (var i = 0; i < coins.length; i++) {
+      result += coins[i];
     }
-    return false;
+    return result;
+  }
+
+  bool operator <(CoinStack other) => value < other.value;
+  bool operator >(CoinStack other) => value > other.value;
+  bool operator <=(CoinStack other) => value <= other.value;
+  bool operator >=(CoinStack other) => value >= other.value;
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! CoinStack) {
+      return false;
+    }
+    return value == other.value;
+  }
+
+  CoinStack operator +(CoinStack other) =>
+      CoinStack([...coins, ...other.coins]);
+
+  CoinStack? operator -(CoinStack other) {
+    final newCoins = [...coins];
+    for (final coin in other.coins) {
+      if (newCoins.contains(coin)) {
+        newCoins.remove(coin);
+      } else {
+        return null;
+      }
+    }
+    return CoinStack(newCoins);
   }
 
   @override
-  CoinStack operator +(CoinStack other) {
-    return CoinStack(a + other.a);
-  }
-
-  @override
-  CoinStack operator -(CoinStack other) {
-    return CoinStack(a - other.a);
-  }
-
-  @override
-  String toString() => 'Coinstack: ($a)';
+  String toString() => 'Geldstapel mit Münzen: ${coins.join(', ')}';
 }
